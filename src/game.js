@@ -1,6 +1,7 @@
 import Paddle from "/src/paddle";
 import InputHandler from "/src/input";
 import Ball from "/src/ball";
+import Lives from '/src/lives';
 
 import { buildLevel, level1, level2 } from "/src/levels";
 
@@ -21,6 +22,7 @@ export default class Game {
     this.gamestate = GAMESTATE.MENU;
     this.paddle = new Paddle(this);
     this.ball = new Ball(this);
+    this.livesText = new Lives(this);
 
     this.gameObjects = [];
     this.bricks = [];
@@ -52,6 +54,7 @@ export default class Game {
   }
 
   update(deltaTime) {
+    this.livesText.update(this.lives);
     if (this.lives === 0) this.gamestate = GAMESTATE.GAMEOVER;
 
     if (
@@ -76,7 +79,7 @@ export default class Game {
   }
 
   draw(ctx) {
-    [...this.gameObjects, ...this.bricks].forEach((obj) => obj.draw(ctx));
+    [...this.gameObjects, ...this.bricks, this.livesText].forEach((obj) => obj.draw(ctx));
 
     if (this.gamestate === GAMESTATE.PAUSED) {
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
